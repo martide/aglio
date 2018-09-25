@@ -7,8 +7,8 @@
     "aglio": "./bin/aglio.js"
   },
   "scripts": {
-    "test": "grunt test",
-    "prepublish": "grunt compile",
+    "test": "./node_modules/.bin/grunt test",
+    "prepare": "./node_modules/.bin/grunt compile",
     "blanket": {
       "pattern": [
         "aglio/lib"
@@ -48,6 +48,7 @@
     "async": "^1.5.0",
     "coffeelint": "^1.14.2",
     "grunt": "~0.4.5",
+    "grunt-cli": "^1.3.1",
     "grunt-coffeelint": "0.0.13",
     "grunt-contrib-coffee": "^0.13.0",
     "grunt-mocha-cov": "^0.4.0",
