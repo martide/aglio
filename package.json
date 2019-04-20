@@ -35,7 +35,7 @@
     "markdown"
   ],
   "dependencies": {
-    "aglio-theme-olio": "^1.6.3",
+    "aglio-theme-olio": "Gasol/aglio-theme-olio#lib",
     "chokidar": "^1.4.1",
     "cli-color": "^1.1.0",
     "drafter": "^2.0.0-pre",
