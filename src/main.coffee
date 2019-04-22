@@ -116,7 +116,7 @@ exports.render = (input, options, done) ->
 
             # Add filtered input to warnings since we have no
             # error to return
-            res.warnings.input = filteredInput
+            # res.warnings.input = filteredInput
 
             done null, html, res.warnings
 
