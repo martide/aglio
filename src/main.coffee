@@ -91,7 +91,7 @@ exports.render = (input, options, done) ->
             .replace(/\t/g, '    ')
 
     benchmark.start 'parse'
-    drafter.parse filteredInput, type: 'ast', (err, res) ->
+    drafter.parse filteredInput, {}, (err, res) ->
         benchmark.end 'parse'
         if err
             err.input = input
@@ -110,7 +110,7 @@ exports.render = (input, options, done) ->
             options[name] ?= option.default
 
         benchmark.start 'render-total'
-        theme.render res.ast, options, (err, html) ->
+        theme.render res, options, (err, html) ->
             benchmark.end 'render-total'
             if err then return done(err)
 
