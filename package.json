@@ -35,6 +35,7 @@
     "markdown"
   ],
   "dependencies": {
+    "@gasolwu/refract-query": "^0.1.0",
     "aglio-theme-olio": "Gasol/aglio-theme-olio#lib",
     "chokidar": "^1.4.1",
     "cli-color": "^1.1.0",
