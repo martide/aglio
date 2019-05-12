@@ -1,0 +1,6 @@
+{
+    "exclude": [
+        ".mocharc.js",
+        "test/**.coffee"
+    ]
+}

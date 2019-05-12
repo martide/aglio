@@ -15,7 +15,5 @@ addons:
     - gcc-4.8
     - g++-4.8
 env: CXX="g++-4.8" CC="gcc-4.8"
-before_install:
-    - npm install -g grunt-cli
 after_script:
-    - grunt coveralls
+    - npm run coveralls
