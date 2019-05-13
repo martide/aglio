@@ -18,7 +18,9 @@ describe 'API Blueprint Renderer', ->
         assert.ok theme
 
     it 'Should get a list of included files', ->
-        sinon.stub fs, 'readFileSync', -> 'I am a test file'
+        sinon
+            .stub fs, 'readFileSync'
+            .callsFake -> 'I am a test file'
 
         input = '''
             # Title
@@ -85,7 +87,9 @@ describe 'API Blueprint Renderer', ->
         aglio.renderFile src, dest, {}, done
 
     it 'Should render from stdin', (done) ->
-        sinon.stub process.stdin, 'read', -> '# Hello\n'
+        sinon
+            .stub process.stdin, 'read'
+            .callsFake -> '# Hello\n'
 
         setTimeout -> process.stdin.emit 'readable', 1
 
@@ -117,7 +121,9 @@ describe 'API Blueprint Renderer', ->
         aglio.compileFile src, dest, done
 
     it 'Should compile from stdin', (done) ->
-        sinon.stub process.stdin, 'read', -> '# Hello\n'
+        sinon
+            .stub process.stdin, 'read'
+            .callsFake -> '# Hello\n'
 
         setTimeout -> process.stdin.emit 'readable', 1
 
@@ -164,8 +170,10 @@ describe 'API Blueprint Renderer', ->
             done()
 
     it 'Should error on drafter failure', (done) ->
-        sinon.stub drafter, 'parse', (content, options, callback) ->
-            callback 'error'
+        sinon
+            .stub drafter, 'parse'
+            .callsFake (content, options, callback) ->
+                callback 'error'
 
         aglio.render blueprint, 'default', (err, html) ->
             assert err
@@ -175,8 +183,10 @@ describe 'API Blueprint Renderer', ->
             done()
 
     it 'Should error on file read failure', (done) ->
-        sinon.stub fs, 'readFile', (filename, options, callback) ->
-            callback 'error'
+        sinon
+            .stub fs, 'readFile'
+            .callsFake (filename, options, callback) ->
+                callback 'error'
 
         aglio.renderFile 'foo', 'bar', 'default', (err, html) ->
             assert err
@@ -186,8 +196,10 @@ describe 'API Blueprint Renderer', ->
             done()
 
     it 'Should error on file write failure', (done) ->
-        sinon.stub fs, 'writeFile', (filename, data, callback) ->
-            callback 'error'
+        sinon
+            .stub fs, 'writeFile'
+            .callsFake (filename, data, callback) ->
+                callback 'error'
 
         aglio.renderFile 'foo', 'bar', 'default', (err, html) ->
             assert err
@@ -197,8 +209,10 @@ describe 'API Blueprint Renderer', ->
             done()
 
     it 'Should error on non-file failure', (done) ->
-        sinon.stub aglio, 'render', (content, template, callback) ->
-            callback 'error'
+        sinon
+            .stub aglio, 'render'
+            .callsFake (content, template, callback) ->
+                callback 'error'
 
         aglio.renderFile path.join(root, 'example.apib'), 'bar', 'default', (err, html) ->
             assert err
@@ -220,21 +234,23 @@ describe 'Executable', ->
     it 'Should render a file', (done) ->
         sinon.stub console, 'error'
 
-        sinon.stub aglio, 'renderFile', (i, o, t, callback) ->
-            warnings = [
-                {
-                    code: 1
-                    message: 'Test message'
-                    location: [
-                        {
-                            index: 0
-                            length: 1
-                        }
-                    ]
-                }
-            ]
-            warnings.input = 'test'
-            callback null, warnings
+        sinon
+            .stub aglio, 'renderFile'
+            .callsFake (i, o, t, callback) ->
+                warnings = [
+                    {
+                        code: 1
+                        message: 'Test message'
+                        location: [
+                            {
+                                index: 0
+                                length: 1
+                            }
+                        ]
+                    }
+                ]
+                warnings.input = 'test'
+                callback null, warnings
 
         bin.run {}, (err) ->
             assert err
@@ -245,8 +261,10 @@ describe 'Executable', ->
             done()
 
     it 'Should compile a file', (done) ->
-        sinon.stub aglio, 'compileFile', (i, o, callback) ->
-            callback null
+        sinon
+            .stub aglio, 'compileFile'
+            .callsFake (i, o, callback) ->
+                callback null
 
         bin.run c: 1, i: path.join(root, 'example.apib'), o: '-', ->
             aglio.compileFile.restore()
@@ -255,36 +273,40 @@ describe 'Executable', ->
     it 'Should start a live preview server', (done) ->
         @timeout 5000
 
-        sinon.stub aglio, 'render', (i, t, callback) ->
-            callback null, 'foo'
+        sinon
+            .stub aglio, 'render'
+            .callsFake (i, t, callback) ->
+                callback null, 'foo'
 
-        sinon.stub http, 'createServer', (handler) ->
-            listen: (port, host, cb) ->
-                console.log 'calling listen'
-                # Simulate requests
-                req =
-                    url: '/favicon.ico'
-                res =
-                    end: (data) ->
-                        assert not data
-                handler req, res
+        sinon
+            .stub http, 'createServer'
+            .callsFake (handler) ->
+                listen: (port, host, cb) ->
+                    console.log 'calling listen'
+                    # Simulate requests
+                    req =
+                        url: '/favicon.ico'
+                    res =
+                        end: (data) ->
+                            assert not data
+                    handler req, res
 
-                req =
-                    url: '/'
-                res =
-                    writeHead: (status, headers) -> false
-                    end: (data) ->
-                        aglio.render.restore()
-                        cb()
-                        file = fs.readFileSync 'example.apib', 'utf8'
-                        setTimeout ->
-                            fs.writeFileSync 'example.apib', file, 'utf8'
+                    req =
+                        url: '/'
+                    res =
+                        writeHead: (status, headers) -> false
+                        end: (data) ->
+                            aglio.render.restore()
+                            cb()
+                            file = fs.readFileSync 'example.apib', 'utf8'
                             setTimeout ->
-                                console.log.restore()
-                                done()
+                                fs.writeFileSync 'example.apib', file, 'utf8'
+                                setTimeout ->
+                                    console.log.restore()
+                                    done()
+                                , 500
                             , 500
-                        , 500
-                handler req, res
+                    handler req, res
 
         sinon.stub console, 'log'
         sinon.stub console, 'error'
@@ -306,8 +328,10 @@ describe 'Executable', ->
 
     it 'Should handle theme load errors', (done) ->
         sinon.stub console, 'error'
-        sinon.stub aglio, 'getTheme', ->
-            throw new Error('Could not load theme')
+        sinon
+            .stub aglio, 'getTheme'
+            .callsFake ->
+                throw new Error('Could not load theme')
 
         bin.run template: 'invalid', (err) ->
             console.error.restore()
@@ -316,14 +340,16 @@ describe 'Executable', ->
             done()
 
     it 'Should handle rendering errors', (done) ->
-        sinon.stub aglio, 'renderFile', (i, o, t, callback) ->
-            callback
-                code: 1
-                message: 'foo'
-                input: 'foo bar baz'
-                location: [
-                    { index: 1, length: 1 }
-                ]
+        sinon
+            .stub aglio, 'renderFile'
+            .callsFake (i, o, t, callback) ->
+                callback
+                    code: 1
+                    message: 'foo'
+                    input: 'foo bar baz'
+                    location: [
+                        { index: 1, length: 1 }
+                    ]
 
         sinon.stub console, 'error'
 
