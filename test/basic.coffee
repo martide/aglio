@@ -271,7 +271,7 @@ describe 'Executable', ->
             done()
 
     it 'Should start a live preview server', (done) ->
-        @timeout 5000
+        @timeout process.env.npm_package_config_coverage_timeout || 5000
 
         sinon
             .stub aglio, 'render'
