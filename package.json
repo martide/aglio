@@ -7,7 +7,7 @@
     "aglio": "./bin/aglio.js"
   },
   "config": {
-      "coverage_timeout": 10000
+    "coverage_timeout": 10000
   },
   "scripts": {
     "build": "npm run lint && npm run compile",
@@ -41,7 +41,6 @@
   ],
   "dependencies": {
     "aglio-theme-olio": "github:Gasol/aglio-theme-olio#lib",
-    "chokidar": "^1.4.1",
     "chokidar": "^2.1.5",
     "cli-color": "^1.1.0",
     "drafter": "^2.0.0-pre.1",
