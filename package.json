@@ -44,7 +44,7 @@
     "chokidar": "^2.1.5",
     "cli-color": "^1.1.0",
     "drafter": "^2.0.0-pre.1",
-    "pretty-error": "^1.2.0",
+    "pretty-error": "^2.1.2",
     "serve-static": "^1.10.0",
     "socket.io": "^2.2.0",
     "yargs": "^3.31.0"
